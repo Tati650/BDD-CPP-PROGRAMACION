@@ -3,37 +3,60 @@
 
 int main() {
     try {
-        // Conectarse a la base de datos PostgreSQL
-        pqxx::connection conn("dbname=tu_base user=tu_usuario password=tu_contraseña host=localhost port=5432");
+        std::cout << "🔧 Iniciando conexión a PostgreSQL..." << std::endl;
+
+
+        pqxx::connection conn(
+            "dbname=postgres "
+            "user=postgres "
+            "password=1234 "
+            "host=localhost "
+            "port=5432"
+        );
 
         if (conn.is_open()) {
-            std::cout << "Conexión exitosa a la base de datos: " << conn.dbname() << std::endl;
+            std::cout << "✅ Conexión exitosa!" << std::endl;
+            std::cout << "   Base de datos: " << conn.dbname() << std::endl;
         } else {
-            std::cout << "No se pudo conectar a la base de datos." << std::endl;
+            std::cout << "❌ No se pudo conectar" << std::endl;
             return 1;
         }
 
-        // Crear una transacción
+        // Crear transacción
         pqxx::work txn(conn);
 
-        // Ejecutar una consulta (ejemplo: seleccionar datos)
-        pqxx::result result = txn.exec("SELECT version();");
+        // Consulta simple
+        std::cout << "🔍 Ejecutando consulta..." << std::endl;
+        pqxx::result result = txn.exec("SELECT version(), current_timestamp;");
 
-        // Mostrar el resultado
-        for (auto row : result) {
-            std::cout << "Versión de PostgreSQL: " << row[0].c_str() << std::endl;
+        // Mostrar resultados
+        std::cout << "📊 Resultados (" << result.size() << " filas):" << std::endl;
+        for (const auto& row : result) {
+            std::cout << "   Versión: " << row[0].c_str() << std::endl;
+            std::cout << "   Fecha: " << row[1].c_str() << std::endl;
         }
 
-        // Confirmar la transacción (commit)
         txn.commit();
+        std::cout << "🎉 ¡Todo funcionó correctamente!" << std::endl;
 
-        // La conexión se cierra automáticamente al destruir el objeto `conn`
-        std::cout << "Transacción completada y conexión cerrada." << std::endl;
-
-    } catch (const std::exception &e) {
-        std::cerr << "Error: " << e.what() << std::endl;
+    } catch (const pqxx::sql_error& e) {
+        std::cerr << "❌ Error SQL: " << e.what() << std::endl;
+        std::cerr << "   Consulta: " << e.query() << std::endl;
+        return 1;
+    } catch (const std::exception& e) {
+        std::cerr << "❌ Error: " << e.what() << std::endl;
         return 1;
     }
 
+    try {
+        
+    } catch (const pqxx::connection_error& e) {
+        std::cerr << "Error de conexión: " << e.what() << std::endl;
+    } catch (const pqxx::transaction_error& e) {
+        std::cerr << "Error en transacción: " << e.what() << std::endl;
+    } catch (const pqxx::sql_error& e) {
+        std::cerr << "Error SQL: " << e.what() << std::endl;
+        std::cerr << "Query: " << e.query() << std::endl;
+    }
     return 0;
 }

@@ -3,14 +3,14 @@ project(Untitled)
 
 set(CMAKE_CXX_STANDARD 17)
 
-# Indicar el toolchain de vcpkg
-set(CMAKE_TOOLCHAIN_FILE "C:/vcpkg/scripts/buildsystems/vcpkg.cmake" CACHE STRING "Vcpkg toolchain file")
+# Toolchain de vcpkg
+set(CMAKE_TOOLCHAIN_FILE "C:/vcpkg/scripts/buildsystems/vcpkg.cmake")
 
-# Buscar libpqxx (usa los cmake files de vcpkg)
+# Buscar libpqxx - versión corregida
 find_package(libpqxx CONFIG REQUIRED)
 
 # Crear el ejecutable
 add_executable(${PROJECT_NAME} main.cpp)
 
-# Enlazar libpqxx
-target_link_libraries(${PROJECT_NAME} PRIVATE pqxx)
+# Enlazar libpqxx - forma correcta
+target_link_libraries(${PROJECT_NAME} PRIVATE libpqxx::pqxx)
