@@ -1,62 +1,52 @@
 #include <iostream>
 #include <pqxx/pqxx>
-
+using namespace std;
 int main() {
     try {
-        std::cout << "🔧 Iniciando conexión a PostgreSQL..." << std::endl;
+        cout << "SISTEMA ESCOLAR - PRUEBA DE CONEXION" << endl;
+        cout << "========================================" << endl;
 
 
-        pqxx::connection conn(
-            "dbname=postgres "
+        string connection_string =
+            "dbname=programacion "
             "user=postgres "
             "password=1234 "
             "host=localhost "
-            "port=5432"
-        );
+            "port=5432";
+
+        cout << "Intentando conectar a la base de datos..." << endl;
+
+        // Crear conexión
+        pqxx::connection conn(connection_string);
 
         if (conn.is_open()) {
-            std::cout << "✅ Conexión exitosa!" << std::endl;
-            std::cout << "   Base de datos: " << conn.dbname() << std::endl;
+            cout << "Conexion exitosa a PostgreSQL" << endl;
+            cout << "   Base de datos: " << conn.dbname() << endl;
         } else {
-            std::cout << "❌ No se pudo conectar" << std::endl;
+            cout << "No se pudo conectar a la base de datos" << endl;
             return 1;
         }
 
-        // Crear transacción
+        // Probar una consulta simple
+        cout << "\nEjecutando consulta de prueba..." << endl;
         pqxx::work txn(conn);
-
-        // Consulta simple
-        std::cout << "🔍 Ejecutando consulta..." << std::endl;
         pqxx::result result = txn.exec("SELECT version(), current_timestamp;");
+        txn.commit();
 
-        // Mostrar resultados
-        std::cout << "📊 Resultados (" << result.size() << " filas):" << std::endl;
+        cout << " Resultado obtenido:" << endl;
         for (const auto& row : result) {
-            std::cout << "   Versión: " << row[0].c_str() << std::endl;
-            std::cout << "   Fecha: " << row[1].c_str() << std::endl;
+            cout << "   PostgreSQL: " << row[0].c_str() << endl;
+            cout << "   Fecha/Hora: " << row[1].c_str() << endl;
         }
 
-        txn.commit();
-        std::cout << "🎉 ¡Todo funcionó correctamente!" << std::endl;
+        cout << "\nTodo funciono correctamente" << endl;
 
-    } catch (const pqxx::sql_error& e) {
-        std::cerr << "❌ Error SQL: " << e.what() << std::endl;
-        std::cerr << "   Consulta: " << e.query() << std::endl;
-        return 1;
-    } catch (const std::exception& e) {
-        std::cerr << "❌ Error: " << e.what() << std::endl;
+    } catch (const exception& e) {
+        cerr << " Error: " << e.what() << endl;
         return 1;
     }
 
-    try {
-        
-    } catch (const pqxx::connection_error& e) {
-        std::cerr << "Error de conexión: " << e.what() << std::endl;
-    } catch (const pqxx::transaction_error& e) {
-        std::cerr << "Error en transacción: " << e.what() << std::endl;
-    } catch (const pqxx::sql_error& e) {
-        std::cerr << "Error SQL: " << e.what() << std::endl;
-        std::cerr << "Query: " << e.query() << std::endl;
-    }
+    cout << "\nPresiona Enter para salir...";
+    cin.get();
     return 0;
 }
