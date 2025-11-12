@@ -4,13 +4,14 @@
 using namespace std;
 
 int main() {
+int numero = 0;
     try {
         cout << "SISTEMA ESCOLAR - PRUEBA DE CONEXION" << endl;
         cout << "========================================" << endl;
 
         // Configuración de conexión
         const string connection_string =
-            "dbname=escuela "
+            "dbname= bdescuela "
             "user=postgres "
             "password=1234 "
             "host=localhost "
@@ -43,29 +44,21 @@ int main() {
 
         cout << "\nTodo funciono correctamente" << endl;
 
-        cout << "----------Menu----------" << endl;
-        cout << "Presione: (1), (2), (3) o (4)" << endl;
-        cout << "(1)Ver alumnos" << endl;
-        cout << "(2)gestionar alumnos" << endl;
-        cout << "(3)gestionar notas" << endl;
-        cout << "(4)gestionar asistencias" << endl;
-        cout << "------------------------" << endl;
-        cin >> numero;
-        if (numero == 1) {
-
-        }else
-            if (numero == 2) {
-
-        }else
-            if (numero == 3) {
-
-        }else
-            if (numero == 4) {
-
-        }else cout << "Intente otra vez." << endl;
     } catch (const exception& e) {
         cerr << "Error: " << e.what() << endl;
         return 1;
+    }
+    cout << "----------Menu----------" << endl;
+    cout << "Presione: (1), (2), (3) o (4)" << endl;
+    cout << "(1)Ver alumnos" << endl;
+    cout << "(2)gestionar alumnos" << endl;
+    cout << "(3)gestionar notas" << endl;
+    cout << "(4)gestionar asistencias" << endl;
+    cout << "------------------------" << endl;
+    cin >> numero;
+    switch (numero) {
+        case 1: cout << "zz" << endl;
+            break;
     }
 
     cout << "\nPresiona Enter para salir...";

@@ -2,7 +2,7 @@
 
 -- DROP DATABASE IF EXISTS escuela;
 
-CREATE DATABASE escuela
+CREATE DATABASE "BDEscuela"
     WITH
     OWNER = postgres
     ENCODING = 'UTF8'

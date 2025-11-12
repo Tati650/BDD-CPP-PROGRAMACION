@@ -1,16 +1,18 @@
+
 cmake_minimum_required(VERSION 3.20)
 project(Untitled)
 
-set(CMAKE_CXX_STANDARD 17)
 
-# Toolchain de vcpkg
-set(CMAKE_TOOLCHAIN_FILE "C:/vcpkg/scripts/buildsystems/vcpkg.cmake")
+set(CMAKE_CXX_STANDARD 20)  # Cambia de 17 a 20
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Buscar libpqxx - versión corregida
-find_package(libpqxx CONFIG REQUIRED)
 
-# Crear el ejecutable
-add_executable(${PROJECT_NAME} main.cpp)
+add_executable(Untitled main.cpp)
 
-# Enlazar libpqxx - forma correcta
-target_link_libraries(${PROJECT_NAME} PRIVATE libpqxx::pqxx)
+
+find_package(PostgreSQL REQUIRED)
+find_package(libpqxx REQUIRED)
+
+
+target_link_libraries(Untitled PRIVATE libpqxx::pqxx PostgreSQL::PostgreSQL)
+
