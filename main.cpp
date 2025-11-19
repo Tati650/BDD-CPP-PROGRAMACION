@@ -2,21 +2,17 @@
 #include <string>
 #include <pqxx/pqxx>
 
-
 using namespace std;
-
 
 class SistemaEscolar {
 private:
     string connection_string = "dbname=bdescuela user=postgres password=1234 host=localhost port=5432";
-
 
     void mostrarAlumnos() {
         try {
             pqxx::connection conn(connection_string);
             pqxx::work txn(conn);
             pqxx::result result = txn.exec("SELECT id_alumno, nombre_alumno, edad_alumno FROM alumnos ORDER BY id_alumno");
-
 
             cout << "\n--- ALUMNOS ---\n";
             for (const auto& row : result) {
@@ -29,18 +25,15 @@ private:
         }
     }
 
-
     void agregarAlumno() {
         string nombre;
         int edad;
-
 
         cout << "\nNombre: ";
         cin.ignore();
         getline(cin, nombre);
         cout << "Edad: ";
         cin >> edad;
-
 
         try {
             pqxx::connection conn(connection_string);
@@ -53,12 +46,10 @@ private:
         }
     }
 
-
     void eliminarAlumno() {
         int id;
         cout << "\nID del alumno: ";
         cin >> id;
-
 
         try {
             pqxx::connection conn(connection_string);
@@ -71,13 +62,11 @@ private:
         }
     }
 
-
     void mostrarMaterias() {
         try {
             pqxx::connection conn(connection_string);
             pqxx::work txn(conn);
             pqxx::result result = txn.exec("SELECT id_materia, nombre_materia FROM materias ORDER BY id_materia");
-
 
             cout << "\n--- MATERIAS ---\n";
             for (const auto& row : result) {
@@ -89,14 +78,12 @@ private:
         }
     }
 
-
     void agregarMateria() {
         string nombre;
 
         cout << "\nNombre de la materia: ";
         cin.ignore();
         getline(cin, nombre);
-
 
         try {
             pqxx::connection conn(connection_string);
@@ -109,12 +96,10 @@ private:
         }
     }
 
-
     void eliminarMateria() {
         int id;
         cout << "\nID de la materia: ";
         cin >> id;
-
 
         try {
             pqxx::connection conn(connection_string);
@@ -127,7 +112,6 @@ private:
         }
     }
 
-
     void mostrarNotas() {
         try {
             pqxx::connection conn(connection_string);
@@ -138,7 +122,6 @@ private:
                 "JOIN alumnos a ON n.id_alumno = a.id_alumno "
                 "JOIN materias m ON n.id_materia = m.id_materia"
             );
-
 
             cout << "\n--- NOTAS ---\n";
             for (const auto& row : result) {
@@ -152,10 +135,8 @@ private:
         }
     }
 
-
     void agregarNota() {
         int id_alumno, id_materia, nota;
-
 
         // Mostrar alumnos disponibles
         cout << "\n--- ALUMNOS DISPONIBLES ---\n";
@@ -164,14 +145,12 @@ private:
         cout << "\n--- MATERIAS DISPONIBLES ---\n";
         mostrarMaterias();
 
-
         cout << "\nID Alumno: ";
         cin >> id_alumno;
         cout << "ID Materia: ";
         cin >> id_materia;
         cout << "Nota: ";
         cin >> nota;
-
 
         try {
             pqxx::connection conn(connection_string);
@@ -185,12 +164,10 @@ private:
         }
     }
 
-
     void eliminarNota() {
         int id_nota;
         cout << "\nID de la nota a eliminar: ";
         cin >> id_nota;
-
 
         try {
             pqxx::connection conn(connection_string);
@@ -203,7 +180,6 @@ private:
         }
     }
 
-
     void mostrarAsistencias() {
         try {
             pqxx::connection conn(connection_string);
@@ -215,7 +191,6 @@ private:
                 "JOIN materias m ON asi.id_materia = m.id_materia "
                 "ORDER BY asi.fecha DESC, a.nombre_alumno"
             );
-
 
             cout << "\n--- ASISTENCIAS ---\n";
             for (const auto& row : result) {
@@ -230,18 +205,15 @@ private:
         }
     }
 
-
     void agregarAsistencia() {
         int id_alumno, id_materia;
         string fecha, estado;
-
 
         cout << "\n--- ALUMNOS DISPONIBLES ---\n";
         mostrarAlumnos();
 
         cout << "\n--- MATERIAS DISPONIBLES ---\n";
         mostrarMaterias();
-
 
         cout << "\nID Alumno: ";
         cin >> id_alumno;
@@ -251,7 +223,6 @@ private:
         cin >> fecha;
         cout << "Estado (Presente/Ausente/Tardanza): ";
         cin >> estado;
-
 
         try {
             pqxx::connection conn(connection_string);
@@ -266,12 +237,10 @@ private:
         }
     }
 
-
     void eliminarAsistencia() {
         int id_asistencia;
         cout << "\nID de la asistencia a eliminar: ";
         cin >> id_asistencia;
-
 
         try {
             pqxx::connection conn(connection_string);
@@ -284,12 +253,10 @@ private:
         }
     }
 
-
     void buscarAsistenciasPorFecha() {
         string fecha;
         cout << "\nFecha a buscar (YYYY-MM-DD): ";
         cin >> fecha;
-
 
         try {
             pqxx::connection conn(connection_string);
@@ -302,7 +269,6 @@ private:
                 "WHERE asi.fecha = " + txn.quote(fecha) + " "
                 "ORDER BY a.nombre_alumno"
             );
-
 
             cout << "\n--- ASISTENCIAS DEL " << fecha << " ---\n";
             if (result.size() == 0) {
@@ -320,7 +286,6 @@ private:
         }
     }
 
-
     void buscarAsistenciasPorAlumno() {
         int id_alumno;
 
@@ -328,7 +293,6 @@ private:
         mostrarAlumnos();
         cout << "\nID del alumno: ";
         cin >> id_alumno;
-
 
         try {
             pqxx::connection conn(connection_string);
@@ -341,7 +305,6 @@ private:
                 "WHERE asi.id_alumno = " + to_string(id_alumno) + " "
                 "ORDER BY asi.fecha DESC"
             );
-
 
             cout << "\n--- ASISTENCIAS DEL ALUMNO ---\n";
             if (result.size() == 0) {
@@ -359,60 +322,132 @@ private:
         }
     }
 
-
-public:
-    void menuPrincipal() {
+    // Menús secundarios
+    void menuGestionAlumnos() {
         int opcion;
         do {
-            cout << "\n=== SISTEMA ESCOLAR ===\n";
+            cout << "\n=== GESTION DE ALUMNOS ===\n";
             cout << "1. Mostrar alumnos\n";
             cout << "2. Agregar alumno\n";
             cout << "3. Eliminar alumno\n";
-            cout << "4. Mostrar materias\n";
-            cout << "5. Agregar materia\n";
-            cout << "6. Eliminar materia\n";
-            cout << "7. Mostrar notas\n";
-            cout << "8. Agregar nota\n";
-            cout << "9. Eliminar nota\n";
-            cout << "10. Mostrar todas las asistencias\n";
-            cout << "11. Agregar asistencia\n";
-            cout << "12. Eliminar asistencia\n";
-            cout << "13. Buscar asistencias por fecha\n";
-            cout << "14. Buscar asistencias por alumno\n";
-            cout << "15. Salir\n";
+            cout << "4. Volver al menu principal\n";
             cout << "Opcion: ";
             cin >> opcion;
-
 
             switch(opcion) {
                 case 1: mostrarAlumnos(); break;
                 case 2: agregarAlumno(); break;
                 case 3: eliminarAlumno(); break;
-                case 4: mostrarMaterias(); break;
-                case 5: agregarMateria(); break;
-                case 6: eliminarMateria(); break;
-                case 7: mostrarNotas(); break;
-                case 8: agregarNota(); break;
-                case 9: eliminarNota(); break;
-                case 10: mostrarAsistencias(); break;
-                case 11: agregarAsistencia(); break;
-                case 12: eliminarAsistencia(); break;
-                case 13: buscarAsistenciasPorFecha(); break;
-                case 14: buscarAsistenciasPorAlumno(); break;
-                case 15: cout << "Chau!\n"; break;
+                case 4: cout << "Volviendo al menu principal...\n"; break;
                 default: cout << "Opcion invalida!\n";
             }
+        } while (opcion != 4);
+    }
 
+    void menuGestionMaterias() {
+        int opcion;
+        do {
+            cout << "\n=== GESTION DE MATERIAS ===\n";
+            cout << "1. Mostrar materias\n";
+            cout << "2. Agregar materia\n";
+            cout << "3. Eliminar materia\n";
+            cout << "4. Volver al menu principal\n";
+            cout << "Opcion: ";
+            cin >> opcion;
 
-        } while (opcion != 15);
+            switch(opcion) {
+                case 1: mostrarMaterias(); break;
+                case 2: agregarMateria(); break;
+                case 3: eliminarMateria(); break;
+                case 4: cout << "Volviendo al menu principal...\n"; break;
+                default: cout << "Opcion invalida!\n";
+            }
+        } while (opcion != 4);
+    }
+
+    void menuGestionNotas() {
+        int opcion;
+        do {
+            cout << "\n=== GESTION DE NOTAS ===\n";
+            cout << "1. Mostrar notas\n";
+            cout << "2. Agregar nota\n";
+            cout << "3. Eliminar nota\n";
+            cout << "4. Volver al menu principal\n";
+            cout << "Opcion: ";
+            cin >> opcion;
+
+            switch(opcion) {
+                case 1: mostrarNotas(); break;
+                case 2: agregarNota(); break;
+                case 3: eliminarNota(); break;
+                case 4: cout << "Volviendo al menu principal...\n"; break;
+                default: cout << "Opcion invalida!\n";
+            }
+        } while (opcion != 4);
+    }
+
+    void menuGestionAsistencias() {
+        int opcion;
+        do {
+            cout << "\n=== GESTION DE ASISTENCIAS ===\n";
+            cout << "1. Mostrar todas las asistencias\n";
+            cout << "2. Agregar asistencia\n";
+            cout << "3. Eliminar asistencia\n";
+            cout << "4. Buscar asistencias por fecha\n";
+            cout << "5. Buscar asistencias por alumno\n";
+            cout << "6. Volver al menu principal\n";
+            cout << "Opcion: ";
+            cin >> opcion;
+
+            switch(opcion) {
+                case 1: mostrarAsistencias(); break;
+                case 2: agregarAsistencia(); break;
+                case 3: eliminarAsistencia(); break;
+                case 4: buscarAsistenciasPorFecha(); break;
+                case 5: buscarAsistenciasPorAlumno(); break;
+                case 6: cout << "Volviendo al menu principal...\n"; break;
+                default: cout << "Opcion invalida!\n";
+            }
+        } while (opcion != 6);
+    }
+
+public:
+    void menuPrincipal() {
+        int opcion;
+        string contra, nombreuser;
+        cout << "Ingrese su nombre de usuario: \n";
+        cin >> nombreuser;
+        if (nombreuser=="Profesor") {
+            cout << "Ingrese su contrasenia: \n";
+            cin >> contra;
+            if (contra=="banana") {
+                do {
+                    cout << "\n=== SISTEMA ESCOLAR ===\n";
+                    cout << "1. Gestionar alumnos\n";
+                    cout << "2. Gestionar materias\n";
+                    cout << "3. Gestionar notas\n";
+                    cout << "4. Gestionar asistencias\n";
+                    cout << "5. Salir\n";
+                    cout << "Opcion: ";
+                    cin >> opcion;
+
+                    switch(opcion) {
+                        case 1: menuGestionAlumnos(); break;
+                        case 2: menuGestionMaterias(); break;
+                        case 3: menuGestionNotas(); break;
+                        case 4: menuGestionAsistencias(); break;
+                        case 5: cout << "Chau!\n"; break;
+                        default: cout << "Opcion invalida!\n";
+                    }
+
+                } while (opcion != 5);
+            }else cout << "Contrasenia invalida\n";
+        }else cout << "Nombre invalido \n";
     }
 };
-
 
 int main() {
     SistemaEscolar sistema;
     sistema.menuPrincipal();
     return 0;
 }
-
-
