@@ -138,7 +138,7 @@ private:
     void agregarNota() {
         int id_alumno, id_materia, nota;
 
-        // Mostrar alumnos disponibles
+
         cout << "\n--- ALUMNOS DISPONIBLES ---\n";
         mostrarAlumnos();
 
@@ -322,7 +322,7 @@ private:
         }
     }
 
-    // Menús secundarios
+
     void menuGestionAlumnos() {
         int opcion;
         do {
@@ -413,7 +413,7 @@ private:
 
 public:
     void menuPrincipal() {
-        int opcion;
+        int opcion = 0;
         string contra, nombreuser;
         cout << "Ingrese su nombre de usuario: \n";
         cin >> nombreuser;
@@ -440,7 +440,7 @@ public:
                         default: cout << "Opcion invalida!\n";
                     }
 
-                } while (opcion != 5);
+                } while (opcion != 5 );
             }else cout << "Contrasenia invalida\n";
         }else cout << "Nombre invalido \n";
     }
